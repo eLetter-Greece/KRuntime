@@ -2,7 +2,7 @@
 
 namespace Microsoft.Framework.Runtime
 {
-    public class CacheContext
+    public class CacheContext : ICacheContext
     {
         public object Key { get; private set; }
 

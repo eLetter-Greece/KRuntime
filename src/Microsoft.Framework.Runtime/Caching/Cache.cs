@@ -15,7 +15,7 @@ namespace Microsoft.Framework.Runtime
             _accessor = accessor;
         }
 
-        public object Get(object key, Func<CacheContext, object> factory)
+        public object Get(object key, Func<ICacheContext, object> factory)
         {
             var entry = _entries.AddOrUpdate(key,
                 k => AddEntry(k, factory),
@@ -24,7 +24,7 @@ namespace Microsoft.Framework.Runtime
             return entry.Value.Result;
         }
 
-        public object Get(object key, Func<CacheContext, object, object> factory)
+        public object Get(object key, Func<ICacheContext, object, object> factory)
         {
             var entry = _entries.AddOrUpdate(key,
                 k => AddEntry(k, (ctx) => factory(ctx, null)),
@@ -34,7 +34,7 @@ namespace Microsoft.Framework.Runtime
         }
 
 
-        private Lazy<CacheEntry> AddEntry(object k, Func<CacheContext, object> acquire)
+        private Lazy<CacheEntry> AddEntry(object k, Func<ICacheContext, object> acquire)
         {
             return new Lazy<CacheEntry>(() =>
             {
@@ -44,7 +44,7 @@ namespace Microsoft.Framework.Runtime
             });
         }
 
-        private Lazy<CacheEntry> UpdateEntry(Lazy<CacheEntry> currentEntry, object k, Func<CacheContext, object> acquire)
+        private Lazy<CacheEntry> UpdateEntry(Lazy<CacheEntry> currentEntry, object k, Func<ICacheContext, object> acquire)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace Microsoft.Framework.Runtime
             }
         }
 
-        private CacheEntry CreateEntry(object k, Func<CacheContext, object> acquire)
+        private CacheEntry CreateEntry(object k, Func<ICacheContext, object> acquire)
         {
             var entry = new CacheEntry();
             var context = new CacheContext(k, entry.AddCacheDependency);
